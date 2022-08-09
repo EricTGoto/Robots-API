@@ -42,6 +42,16 @@ test('all robots are returned', async () => {
   expect(response.body).toHaveLength(initialRobots.length);
 });
 
+test('specific robot is returned via identifier', async () => {
+  const resultRobot = await api
+    .get(`/api/robots/${initialRobots[0].identifier}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const robotAsJSON = JSON.parse(JSON.stringify(initialRobots[0]));
+  expect(resultRobot.body).toEqual(robotAsJSON);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

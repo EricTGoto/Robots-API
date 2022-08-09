@@ -16,4 +16,11 @@ const robotSchema = new mongoose.Schema({
   },
 });
 
+robotSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
 module.exports = mongoose.model('Robot', robotSchema);
