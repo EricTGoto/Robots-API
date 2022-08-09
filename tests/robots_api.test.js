@@ -52,6 +52,12 @@ test('specific robot is returned via identifier', async () => {
   expect(resultRobot.body).toEqual(robotAsJSON);
 });
 
+test('invalid identifier returns 404', async () => {
+  await api
+    .get('/api/robots/invalididentifier')
+    .expect(404);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

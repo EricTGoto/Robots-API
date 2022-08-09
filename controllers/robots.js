@@ -12,7 +12,11 @@ robotsAPIRouter.get('/', (request, response, next) => {
 robotsAPIRouter.get('/:identifier', (request, response, next) => {
   Robot.findOne({ identifier: request.params.identifier })
     .then((robot) => {
-      response.status(200).json(robot);
+      if (robot) {
+        response.status(200).json(robot);
+      } else {
+        response.status(404).end();
+      }
     })
     .catch((error) => next(error));
 });
