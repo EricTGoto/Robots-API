@@ -14,9 +14,17 @@ const initialRobots = [
   {
     name: 'Robo2',
     ownerID: 'Boston Robonamics',
-    NACCS: 'AGAG18',
+    identifier: 'AGAG18',
   },
 ];
+
+beforeEach(async () => {
+  await Robot.deleteMany({});
+  let robotObject = new Robot(initialRobots[0]);
+  await robotObject.save();
+  robotObject = new Robot(initialRobots[1]);
+  await robotObject.save();
+});
 
 test('response is returned as json', async () => {
   await api
