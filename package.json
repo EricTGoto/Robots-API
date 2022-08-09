@@ -1,0 +1,41 @@
+{
+  "name": "robots-api",
+  "version": "1.0.0",
+  "description": "Fictional Robot API",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "start": "cross-env NODE_ENV=production node index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand --forceExit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricTGoto/Robots-API.git"
+  },
+  "keywords": [
+    "Express",
+    "Node",
+    "MongoDB",
+    "API"
+  ],
+  "author": "Eric Goto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EricTGoto/Robots-API/issues"
+  },
+  "homepage": "https://github.com/EricTGoto/Robots-API#readme",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.5.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^8.21.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^28.1.3",
+    "nodemon": "^2.0.19",
+    "supertest": "^6.2.4"
+  }
+}
