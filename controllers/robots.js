@@ -21,4 +21,19 @@ robotsAPIRouter.get('/:identifier', (request, response, next) => {
     .catch((error) => next(error));
 });
 
+robotsAPIRouter.post('/', (request, response, next) => {
+  const { name, ownerID, identifier } = request.body;
+  const newRobot = new Robot({
+    name,
+    ownerID,
+    identifier,
+  });
+
+  newRobot.save()
+    .then((savedRobot) => {
+      response.status(201).json(savedRobot);
+    })
+    .catch((error) => next(error));
+});
+
 module.exports = robotsAPIRouter;
