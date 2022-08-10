@@ -58,6 +58,107 @@ test('invalid identifier returns 404', async () => {
     .expect(404);
 });
 
+test('a valid robot can be added', async () => {
+  const newRobot = {
+    name: 'Robo3',
+    ownerID: 'MUSK CORP',
+    identifier: 'muskSTINKY',
+  };
+
+  await api
+    .post('/api/robots')
+    .send(newRobot)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/robots');
+  const contents = response.body.map((r) => r.name);
+
+  expect(response.body).toHaveLength(initialRobots.length + 1);
+  expect(contents).toContain('Robo3');
+});
+
+test('robot without content is not added', async () => {
+  const newRobot = {
+
+  };
+
+  const postResponse = await api
+    .post('/api/robots')
+    .send(newRobot)
+    .expect(400);
+
+  expect(postResponse.body.error).toEqual('malformed request');
+  const response = await api.get('/api/robots');
+  expect(response.body).toHaveLength(initialRobots.length);
+});
+
+test('robot without ownerID is not added', async () => {
+  const newRobot = {
+    name: 'RoboRobo',
+    identifier: 'UUHS1',
+  };
+
+  const postResponse = await api
+    .post('/api/robots')
+    .send(newRobot)
+    .expect(400);
+
+  expect(postResponse.body.error).toEqual('malformed request');
+  const response = await api.get('/api/robots');
+  expect(response.body).toHaveLength(initialRobots.length);
+});
+
+test('robot without name is not added', async () => {
+  const newRobot = {
+    ownerID: 'D4 Corp',
+    identifier: 'AOPAP13',
+  };
+
+  const postResponse = await api
+    .post('/api/robots')
+    .send(newRobot)
+    .expect(400);
+
+  expect(postResponse.body.error).toEqual('malformed request');
+  const response = await api.get('/api/robots');
+  expect(response.body).toHaveLength(initialRobots.length);
+});
+
+test('robot without identifier is not added', async () => {
+  const newRobot = {
+    name: 'Best Robot',
+    ownerID: 'Robo Inc',
+  };
+
+  const postResponse = await api
+    .post('/api/robots')
+    .send(newRobot)
+    .expect(400);
+
+  expect(postResponse.body.error).toEqual('malformed request');
+  const response = await api.get('/api/robots');
+  expect(response.body).toHaveLength(initialRobots.length);
+});
+
+test('robot without unique identifier is not added', async () => {
+  const newRobot = {
+    name: 'Robo 9000',
+    ownerID: 'Robomart',
+    identifier: 'AGAG18',
+  };
+
+  const postResponse = await api
+    .post('/api/robots')
+    .send(newRobot)
+    .expect(400);
+
+  expect(postResponse.body.error).toEqual('identifier must be unique');
+
+  const response = await api.get('/api/robots');
+  expect(response.body).toHaveLength(initialRobots.length);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
