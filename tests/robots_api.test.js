@@ -16,6 +16,11 @@ const initialRobots = [
     ownerID: 'Boston Robonamics',
     identifier: 'AGAG18',
   },
+  {
+    name: 'Robo3',
+    ownerID: 'Boston Robonamics',
+    identifier: 'WIUN99',
+  },
 ];
 
 beforeEach(async () => {
@@ -23,6 +28,8 @@ beforeEach(async () => {
   let robotObject = new Robot(initialRobots[0]);
   await robotObject.save();
   robotObject = new Robot(initialRobots[1]);
+  await robotObject.save();
+  robotObject = new Robot(initialRobots[2]);
   await robotObject.save();
 });
 
@@ -157,6 +164,41 @@ test('robot without unique identifier is not added', async () => {
 
   const response = await api.get('/api/robots');
   expect(response.body).toHaveLength(initialRobots.length);
+});
+
+test('robot can be deleted by identifier', async () => {
+  await api
+    .delete('/api/robots/UDAS91')
+    .expect(204);
+
+  const robots = await api.get('/api/robots');
+  const identifiers = robots.map((robot) => robot.identifier);
+  expect(robots.body).toHaveLength(initialRobots.length - 1);
+  expect(identifiers).not.toContain('UDAS9');
+});
+
+test('first delete returns 204 any subsequent returns 404', async () => {
+  await api
+    .delete('/api/robots/UDAS91')
+    .expect(204);
+
+  const robots = await api.get('/api/robots');
+  const identifiers = robots.map((robot) => robot.identifier);
+  expect(robots.body).toHaveLength(initialRobots.length - 1);
+  expect(identifiers).not.toContain('UDAS91');
+
+  await api
+    .delete('/api/robots/UDAS91')
+    .expect(404);
+});
+
+test('no effect when deleting a non existent robot', async () => {
+  await api
+    .delete('/api/robots/nonexistent')
+    .expect(204);
+
+  const robots = await api.get('/api/robots');
+  expect(robots.body).toHaveLength(initialRobots.length);
 });
 
 afterAll(() => {
